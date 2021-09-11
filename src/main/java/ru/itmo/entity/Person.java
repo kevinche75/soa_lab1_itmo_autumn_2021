@@ -18,11 +18,16 @@ public class Person {
     private String name; //Поле не может быть null, Строка не может быть пустой
 
     @NotNull
+    private java.util.Date birthday; //Поле не может быть null
+
+    @NotNull
     @Positive
     private Float weight; //Поле может быть null, Значение поля должно быть больше 0
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id")
-    private Location location; //Поле не может быть null
+    @Positive
+    private Double height; //Поле не может быть null, Значение поля должно быть больше 0
+
+    @NotBlank
+    private String passportID; //Строка не может быть пустой, Поле не может быть null
 }
