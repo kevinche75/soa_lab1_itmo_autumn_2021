@@ -1,11 +1,9 @@
 package ru.itmo.converter;
 
-import jdk.vm.ci.meta.Local;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDateTime;
 
-public class XMLLocalDateTimeConverter extends XmlAdapter<String, LocalDateTime> {
+public class XMLLocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
 
     @Override
     public LocalDateTime unmarshal(String s) throws Exception {

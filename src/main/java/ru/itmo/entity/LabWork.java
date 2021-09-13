@@ -2,11 +2,13 @@ package ru.itmo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import ru.itmo.converter.XMLLocalDateTimeAdapter;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +31,7 @@ public class LabWork {
 
     @NotNull
     @XmlElement
+    @XmlJavaTypeAdapter(XMLLocalDateTimeAdapter.class)
     private java.time.LocalDateTime creationDate = java.time.LocalDateTime.now(); //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
     @NotNull
