@@ -7,26 +7,35 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @XmlRootElement
-public class Coordinates {
+public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @XmlElement
     private long id;
 
-    @XmlElement
     @NotNull
-    private Integer x; //Поле не может быть null
+    @XmlElement
+    private float x;
 
-    @XmlElement
     @NotNull
-    private double y;
+    @XmlElement
+    private Integer y; //Поле не может быть null
+
+    @NotNull
+    @XmlElement
+    private int z;
+
+    @NotBlank
+    @XmlElement
+    private String name; //Строка не может быть пустой, Поле не может быть null
 }
