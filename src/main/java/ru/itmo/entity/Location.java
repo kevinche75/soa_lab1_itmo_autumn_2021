@@ -23,7 +23,6 @@ public class Location {
     @XmlElement
     private long id;
 
-    @NotNull
     @XmlElement
     private float x;
 
@@ -31,7 +30,6 @@ public class Location {
     @XmlElement
     private Integer y; //Поле не может быть null
 
-    @NotNull
     @XmlElement
     private int z;
 

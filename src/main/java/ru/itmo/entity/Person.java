@@ -27,7 +27,7 @@ public class Person {
     private Float weight; //Поле может быть null, Значение поля должно быть больше 0
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
     @XmlElement
     private Location location; //Поле не может быть null
