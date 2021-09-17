@@ -9,6 +9,10 @@ import javax.validation.constraints.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -54,4 +58,19 @@ public class LabWork {
     @Enumerated(EnumType.ORDINAL)
     @XmlElement
     private Difficulty difficulty; //Поле может быть null
+
+    public static List<String> getAllFields(){
+        Field[] fields = LabWork.class.getDeclaredFields();
+        List<String> fieldList = Arrays
+                .stream(fields)
+                .map(Field::getName)
+                .filter(field -> !field.equals("coordinates"))
+                .collect(Collectors.toList());
+        Arrays
+                .stream(Coordinates.class.getDeclaredFields())
+                .map(Field::getName)
+                .filter(field -> !field.equals("id"))
+                .forEach(field -> fieldList.add("coordinates." + field));
+        return fieldList;
+    }
 }

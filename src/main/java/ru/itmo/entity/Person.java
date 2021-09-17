@@ -9,6 +9,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,4 +35,19 @@ public class Person {
     @JoinColumn(name = "location_id")
     @XmlElement
     private Location location; //Поле не может быть null
+
+    public static List<String> getAllFields(){
+        Field[] fields = Person.class.getDeclaredFields();
+        List<String> fieldList = Arrays
+                .stream(fields)
+                .map(Field::getName)
+                .filter(field -> !field.equals("location"))
+                .collect(Collectors.toList());
+        Arrays
+                .stream(Location.class.getDeclaredFields())
+                .map(Field::getName)
+                .filter(field -> !field.equals("id"))
+                .forEach(field -> fieldList.add("location." + field));
+        return fieldList;
+    }
 }
