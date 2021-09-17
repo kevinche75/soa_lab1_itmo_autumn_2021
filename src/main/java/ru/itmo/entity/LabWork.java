@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @NoArgsConstructor
 @Entity
 @XmlRootElement
+@Table(name = "labwork")
 public class LabWork {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
