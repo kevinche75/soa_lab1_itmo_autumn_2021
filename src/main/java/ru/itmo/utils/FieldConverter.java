@@ -66,6 +66,14 @@ public class FieldConverter {
         }
     }
 
+    public static Boolean booleanConverter(String bool){
+        try {
+            return Boolean.parseBoolean(bool);
+        } catch (Exception e){
+            return null;
+        }
+    }
+
     public static String sortFieldConverter(String sortField, List<String> fields){
         return fields.contains(sortField) ? sortField : null;
     }

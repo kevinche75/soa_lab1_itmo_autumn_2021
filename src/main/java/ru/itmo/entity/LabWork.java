@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import ru.itmo.converter.XMLLocalDateTimeAdapter;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -68,8 +70,8 @@ public class LabWork {
                 .collect(Collectors.toList());
         Arrays
                 .stream(Coordinates.class.getDeclaredFields())
-                .map(Field::getName)
-                .filter(field -> !field.equals("id"))
+                .filter(field -> !field.getName().equals("id"))
+                .map(field -> "coordinates" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1))
                 .forEach(fieldList::add);
         return fieldList;
     }

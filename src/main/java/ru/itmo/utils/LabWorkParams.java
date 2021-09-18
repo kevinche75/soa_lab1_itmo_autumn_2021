@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class LabWorkParams {
+
     String name;
     LocalDateTime creationDate;
     Float minimalPoint;
