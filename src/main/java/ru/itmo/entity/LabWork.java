@@ -70,7 +70,7 @@ public class LabWork {
                 .stream(Coordinates.class.getDeclaredFields())
                 .map(Field::getName)
                 .filter(field -> !field.equals("id"))
-                .forEach(field -> fieldList.add("coordinates." + field));
+                .forEach(fieldList::add);
         return fieldList;
     }
 }
