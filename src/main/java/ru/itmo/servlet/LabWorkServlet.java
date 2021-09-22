@@ -27,6 +27,14 @@ public class LabWorkServlet extends HttpServlet {
     private static final String PAGE_SIZE_PARAM = "pageSize";
     private static final String SORT_FIELD_PARAM = "sortField";
 
+    private static final String PERSON_NAME_PARAM = "personName";
+    private static final String PERSON_WEIGHT_PARAM = "personWeight";
+
+    private static final String LOCATION_X_PARAM = "locationX";
+    private static final String LOCATION_Y_PARAM = "locationY";
+    private static final String LOCATION_Z_PARAM = "locationZ";
+    private static final String LOCATION_NAME_PARAM = "locationName";
+
     private static final String MINIMAL_NAME_FLAG = "minName";
     private static final String COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG = "count";
     private static final String LESS_MAXIMUM_POINT_FLAG = "lessMaximumPoint";
@@ -43,6 +51,12 @@ public class LabWorkServlet extends HttpServlet {
                 request.getParameter(DIFFICULTY_PARAM),
                 request.getParameter(COORDINATES_X_PARAM),
                 request.getParameter(COORDINATES_Y_PARAM),
+                request.getParameter(PERSON_NAME_PARAM),
+                request.getParameter(PERSON_WEIGHT_PARAM),
+                request.getParameter(LOCATION_X_PARAM),
+                request.getParameter(LOCATION_Y_PARAM),
+                request.getParameter(LOCATION_Z_PARAM),
+                request.getParameter(LOCATION_NAME_PARAM),
                 request.getParameter(PAGE_IDX_PARAM),
                 request.getParameter(PAGE_SIZE_PARAM),
                 request.getParameter(SORT_FIELD_PARAM)
@@ -60,18 +74,18 @@ public class LabWorkServlet extends HttpServlet {
         resp.setContentType("text/xml");
         String pathInfo = req.getPathInfo();
         if (pathInfo == null){
-            Boolean minNameFlag = FieldConverter.booleanConverter(req.getParameter(MINIMAL_NAME_FLAG));
+            Boolean minNameFlag = FieldConverter.booleanConvert(req.getParameter(MINIMAL_NAME_FLAG));
             if (minNameFlag != null && minNameFlag){
                 service.getMinName();
                 return;
             }
-            Boolean count = FieldConverter.booleanConverter(req.getParameter(COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG));
+            Boolean count = FieldConverter.booleanConvert(req.getParameter(COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG));
             if (count != null && count){
                 service.countPersonalQualitiesMaximum(FieldConverter.longConvert(req.getParameter(PERSONAL_QUALITIES_MAXIMUM_PARAM)));
                 return;
             }
             LabWorkParams filterParams = getLabWorksParams(req);
-            Boolean lessMaximumPoint = FieldConverter.booleanConverter(req.getParameter(LESS_MAXIMUM_POINT_FLAG));
+            Boolean lessMaximumPoint = FieldConverter.booleanConvert(req.getParameter(LESS_MAXIMUM_POINT_FLAG));
             if (lessMaximumPoint != null && lessMaximumPoint){
                 service.getLessMaximumPoint(filterParams);
                 return;
@@ -82,9 +96,8 @@ public class LabWorkServlet extends HttpServlet {
             if (parts.length > 1){
                 service.getError(resp);
                 return;
-            }
-            if (FieldConverter.intConverter(parts[0]) != null){
-                service.getLabWork(FieldConverter.intConverter(parts[0]));
+            } else {
+                service.getLabWork(FieldConverter.intConvert(parts[0]), resp);
             }
         }
     }

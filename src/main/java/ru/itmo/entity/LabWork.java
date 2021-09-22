@@ -3,6 +3,7 @@ package ru.itmo.entity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import ru.itmo.converter.XMLLocalDateTimeAdapter;
+import ru.itmo.utils.FieldConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -51,15 +52,19 @@ public class LabWork {
     @XmlElement
     private Float maximumPoint; //Поле не может быть null, Значение поля должно быть больше 0
 
-    @NotNull
     @Positive
     @XmlElement
     private Long personalQualitiesMaximum; //Поле может быть null, Значение поля должно быть больше 0
 
-    @NotNull
     @Enumerated(EnumType.ORDINAL)
     @XmlElement
     private Difficulty difficulty; //Поле может быть null
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "name")
+    @XmlElement
+    private Person author; //Поле не может быть null
 
     public static List<String> getAllFields(){
         Field[] fields = LabWork.class.getDeclaredFields();
@@ -71,7 +76,17 @@ public class LabWork {
         Arrays
                 .stream(Coordinates.class.getDeclaredFields())
                 .filter(field -> !field.getName().equals("id"))
-                .map(field -> "coordinates" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1))
+                .map(field -> FieldConverter.addPrefixFieldConvert("coordinates", field.getName()))
+                .forEach(fieldList::add);
+        Arrays
+                .stream(Person.class.getDeclaredFields())
+                .filter(field -> !field.getName().equals("location"))
+                .map(field -> FieldConverter.addPrefixFieldConvert("person", field.getName()))
+                .forEach(fieldList::add);
+        Arrays
+                .stream(Location.class.getDeclaredFields())
+                .filter(field -> !field.getName().equals("id"))
+                .map(field -> FieldConverter.addPrefixFieldConvert("location", field.getName()))
                 .forEach(fieldList::add);
         return fieldList;
     }

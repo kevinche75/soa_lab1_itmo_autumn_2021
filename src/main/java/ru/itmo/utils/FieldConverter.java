@@ -41,7 +41,7 @@ public class FieldConverter {
         }
     }
 
-    public static Integer intConverter(String number){
+    public static Integer intConvert(String number){
         try {
             return Integer.parseInt(number);
         } catch (Exception e){
@@ -49,7 +49,7 @@ public class FieldConverter {
         }
     }
 
-    public static Integer intConverter(String number, int defaultInteger){
+    public static Integer intConvert(String number, int defaultInteger){
         try {
             return Integer.parseInt(number);
         } catch (Exception e){
@@ -58,7 +58,7 @@ public class FieldConverter {
     }
 
 
-    public static Double doubleConverter(String number){
+    public static Double doubleConvert(String number){
         try {
             return Double.parseDouble(number);
         } catch (Exception e){
@@ -66,7 +66,7 @@ public class FieldConverter {
         }
     }
 
-    public static Boolean booleanConverter(String bool){
+    public static Boolean booleanConvert(String bool){
         try {
             return Boolean.parseBoolean(bool);
         } catch (Exception e){
@@ -74,7 +74,15 @@ public class FieldConverter {
         }
     }
 
-    public static String sortFieldConverter(String sortField, List<String> fields){
+    public static String sortFieldConvert(String sortField, List<String> fields){
         return fields.contains(sortField) ? sortField : null;
+    }
+
+    public static String addPrefixFieldConvert(String prefix, String field){
+        return prefix + field.substring(0, 1).toUpperCase() + field.substring(1);
+    }
+
+    public static String stringLikeConvert(String string){
+        return string + "%";
     }
 }
