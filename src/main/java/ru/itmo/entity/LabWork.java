@@ -1,6 +1,7 @@
 package ru.itmo.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.itmo.converter.XMLLocalDateTimeAdapter;
 import ru.itmo.utils.FieldConverter;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Entity
 @XmlRootElement
 @Table(name = "labwork")
@@ -56,13 +58,13 @@ public class LabWork {
     @XmlElement
     private Long personalQualitiesMaximum; //Поле может быть null, Значение поля должно быть больше 0
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @XmlElement
     private Difficulty difficulty; //Поле может быть null
 
     @NotNull
     @OneToOne
-    @JoinColumn(name = "name")
+    @JoinColumn(name = "person_id")
     @XmlElement
     private Person author; //Поле не может быть null
 
@@ -89,5 +91,16 @@ public class LabWork {
                 .map(field -> FieldConverter.addPrefixFieldConvert("location", field.getName()))
                 .forEach(fieldList::add);
         return fieldList;
+    }
+
+    public void update(LabWork labWorkUpdate){
+        this.name = labWorkUpdate.getName();
+        this.coordinates.update(labWorkUpdate.getCoordinates());
+        this.creationDate = labWorkUpdate.getCreationDate();
+        this.minimalPoint = labWorkUpdate.getMinimalPoint();
+        this.maximumPoint = labWorkUpdate.getMaximumPoint();
+        this.personalQualitiesMaximum = labWorkUpdate.getPersonalQualitiesMaximum();
+        this.difficulty = labWorkUpdate.getDifficulty();
+        this.author.update(labWorkUpdate.getAuthor());
     }
 }

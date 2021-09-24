@@ -4,6 +4,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import ru.itmo.entity.*;
+
+import java.util.Properties;
 
 public class HibernateUtil {
 
@@ -12,7 +15,11 @@ public class HibernateUtil {
     private static SessionFactory buildSessionFactory() throws ExceptionInInitializerError{
         try {
             Configuration configuration = new Configuration();
-            configuration.addPackage("ru.itmo.entity");
+            configuration.addAnnotatedClass(LabWork.class);
+            configuration.addAnnotatedClass(Coordinates.class);
+            configuration.addAnnotatedClass(Difficulty.class);
+            configuration.addAnnotatedClass(Location.class);
+            configuration.addAnnotatedClass(Person.class);
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties()).build();
             return configuration.buildSessionFactory(serviceRegistry);

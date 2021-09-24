@@ -93,23 +93,20 @@ public class LabWorkServlet extends HttpServlet {
             service.getAllLabWorks(filterParams, resp);
         } else {
             String[] parts = pathInfo.split("/");
-            if (parts.length > 1){
-                service.getError(resp);
-                return;
-            } else {
-                service.getLabWork(FieldConverter.intConvert(parts[0]), resp);
-            }
+            service.getLabWork(FieldConverter.longConvert(parts[1]), resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        resp.setContentType("text/xml");
+        service.createLabWork(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+        resp.setContentType("text/ml");
+        service.updateLabWork(req, resp);
     }
 
     @Override

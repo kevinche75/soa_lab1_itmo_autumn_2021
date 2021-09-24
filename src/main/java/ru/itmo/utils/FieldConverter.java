@@ -1,10 +1,13 @@
 package ru.itmo.utils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ru.itmo.entity.Difficulty;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FieldConverter {
 
@@ -84,5 +87,9 @@ public class FieldConverter {
 
     public static String stringLikeConvert(String string){
         return string + "%";
+    }
+
+    public static String bodyToStringConvert(HttpServletRequest request) throws IOException {
+        return request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
     }
 }

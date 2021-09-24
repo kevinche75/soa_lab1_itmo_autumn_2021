@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import ru.itmo.DAO.LabWorksDAO;
 import ru.itmo.converter.XMLConverter;
 import ru.itmo.entity.LabWork;
+import ru.itmo.utils.FieldConverter;
 import ru.itmo.utils.LabWorkParams;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class LabWorksService {
     }
 
     @SneakyThrows
-    public void getLabWork(Integer id, HttpServletResponse response){
+    public void getLabWork(Long id, HttpServletResponse response){
         if (id == null){
             this.getError(response);
             return;
@@ -56,5 +57,31 @@ public class LabWorksService {
 
     public void getError(HttpServletResponse response){
 
+    }
+
+    public void createLabWork(HttpServletRequest request, HttpServletResponse response){
+        try {
+            LabWork labWork = xmlConverter.fromStr(FieldConverter.bodyToStringConvert(request), LabWork.class);
+            Long id = dao.createLabWork(labWork);
+            response.setStatus(200);
+            response.getWriter().write(xmlConverter.toStr(id));
+        } catch (Exception e){
+            getError(response);
+        }
+    }
+
+    public void updateLabWork(HttpServletRequest request, HttpServletResponse response){
+        try {
+            LabWork labWorkUpdate = xmlConverter.fromStr(FieldConverter.bodyToStringConvert(request), LabWork.class);
+            Optional<LabWork> lab = dao.getLabWork(labWorkUpdate.getId());
+            if (lab.isPresent()) {
+                LabWork labWorkPresent = lab.get();
+                labWorkPresent.update(labWorkUpdate);
+                dao.updateLabWork(labWorkPresent);
+                response.setStatus(200);
+            } else getError(response);
+        } catch (Exception e){
+            getError(response);
+        }
     }
 }

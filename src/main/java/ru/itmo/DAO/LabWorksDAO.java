@@ -33,7 +33,7 @@ public class LabWorksDAO {
         return labWorks;
     }
 
-    public Optional<LabWork> getLabWork(int id){
+    public Optional<LabWork> getLabWork(long id){
         Transaction transaction;
         LabWork labWork = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
@@ -44,5 +44,30 @@ public class LabWorksDAO {
             e.printStackTrace();
         }
         return Optional.ofNullable(labWork);
+    }
+
+    public long createLabWork(LabWork labWork){
+        Transaction transaction = null;
+        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            Long id = (Long) session.save(labWork);
+            transaction.commit();
+            return id;
+        } catch (Exception e){
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
+    }
+
+    public void updateLabWork(LabWork labWork){
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            session.update(labWork);
+            transaction.commit();
+        } catch (Exception e){
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
     }
 }
