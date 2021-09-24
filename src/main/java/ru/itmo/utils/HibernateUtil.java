@@ -23,13 +23,6 @@ public class HibernateUtil {
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties()).build();
             return configuration.buildSessionFactory(serviceRegistry);
-//            Properties properties = new Properties();
-//            properties.load(HibernateUtil.class.getClassLoader().getResourceAsStream("hibernate.properties"));
-//
-//            return new Configuration()
-//                    .addProperties(properties)
-//                    .addPackage("ru.itmo.entity")
-//                    .buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("build SeesionFactory failed :" + ex);
             throw new ExceptionInInitializerError(ex);
