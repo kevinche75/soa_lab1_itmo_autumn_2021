@@ -37,7 +37,13 @@ public class LabWorksDAO {
             Join<LabWork, Coordinates> coordinatesJoin = root.join("coordinates");
             Join<LabWork, Person> personJoin = root.join("author");
             Join<Person, Location> locationJoin = personJoin.join("location");
-            List<Predicate> predicates = params.getPredicates(criteriaBuilder, root, coordinatesJoin, personJoin, locationJoin);
+            List<Predicate> predicates;
+
+            if (params.getLessThanMaximalPointFlag()){
+                predicates = params.getLessMaximalPointPredicate(criteriaBuilder, root);
+            } else {
+                 predicates = params.getPredicates(criteriaBuilder, root, coordinatesJoin, personJoin, locationJoin);
+            }
 
             if (params.getSortField() != null){
                 if (params.getSortField().startsWith("coordinates")){

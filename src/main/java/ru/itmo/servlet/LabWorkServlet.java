@@ -59,7 +59,8 @@ public class LabWorkServlet extends HttpServlet {
                 request.getParameter(LOCATION_NAME_PARAM),
                 request.getParameter(PAGE_IDX_PARAM),
                 request.getParameter(PAGE_SIZE_PARAM),
-                request.getParameter(SORT_FIELD_PARAM)
+                request.getParameter(SORT_FIELD_PARAM),
+                request.getParameter(LESS_MAXIMUM_POINT_FLAG)
         );
     }
 
@@ -85,11 +86,6 @@ public class LabWorkServlet extends HttpServlet {
                 return;
             }
             LabWorkParams filterParams = getLabWorksParams(req);
-            Boolean lessMaximumPoint = FieldConverter.booleanConvert(req.getParameter(LESS_MAXIMUM_POINT_FLAG));
-            if (lessMaximumPoint != null && lessMaximumPoint){
-                service.getLessMaximumPoint(filterParams);
-                return;
-            }
             service.getAllLabWorks(filterParams, resp);
         } else {
             String[] parts = pathInfo.split("/");
