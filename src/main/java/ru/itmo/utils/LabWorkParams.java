@@ -1,8 +1,8 @@
 package ru.itmo.utils;
 
-import ru.itmo.entity.Coordinates;
-import ru.itmo.entity.Difficulty;
-import ru.itmo.entity.LabWork;
+import lombok.Getter;
+import ru.itmo.converter.FieldConverter;
+import ru.itmo.entity.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class LabWorkParams {
 
     String name;
@@ -32,7 +33,7 @@ public class LabWorkParams {
     Integer pageSize;
     String sortField;
 
-    private final static String DATE_PATTERN = "yyyy-MM-dd HH:mm";
+    public final static String DATE_PATTERN = "yyyy-MM-dd HH:mm";
 
     public LabWorkParams(
             String name,
@@ -67,15 +68,17 @@ public class LabWorkParams {
         this.locationY = FieldConverter.intConvert(locationY);
         this.locationZ = FieldConverter.intConvert(locationZ);
         this.locationName = locationName;
-        this.pageIdx = FieldConverter.intConvert(pageIdx, 1);
-        this.pageSize = FieldConverter.intConvert(pageSize, 10);
+        this.pageIdx = Math.max(FieldConverter.intConvert(pageIdx, 1), 1);
+        this.pageSize = Math.max(FieldConverter.intConvert(pageSize, 10), 1);
         this.sortField = FieldConverter.sortFieldConvert(sortField, LabWork.getAllFields());
     }
 
     public List<Predicate> getPredicates(
             CriteriaBuilder criteriaBuilder,
             Root<LabWork> root,
-            Join<LabWork, Coordinates> join
+            Join<LabWork, Coordinates> coordinatesJoin,
+            Join<LabWork, Person> personJoin,
+            Join<Person, Location> locationJoin
     ){
         List<Predicate> predicates = new ArrayList<>();
         if (this.name != null){
@@ -97,10 +100,28 @@ public class LabWorkParams {
             predicates.add(criteriaBuilder.equal(root.get("difficulty"), this.difficulty));
         }
         if (this.coordinatesX != null){
-            predicates.add(criteriaBuilder.equal(join.get("x"), this.coordinatesX));
+            predicates.add(criteriaBuilder.equal(coordinatesJoin.get("x"), this.coordinatesX));
         }
         if (this.coordinatesY != null){
-            predicates.add(criteriaBuilder.equal(join.get("y"), this.coordinatesY));
+            predicates.add(criteriaBuilder.equal(coordinatesJoin.get("y"), this.coordinatesY));
+        }
+        if (this.personName != null){
+            predicates.add(criteriaBuilder.like(personJoin.get("name"), FieldConverter.stringLikeConvert(this.personName)));
+        }
+        if (this.personWeight != null){
+            predicates.add(criteriaBuilder.equal(personJoin.get("weight"), this.personWeight));
+        }
+        if (this.locationX != null){
+            predicates.add(criteriaBuilder.equal(locationJoin.get("x"), this.locationX));
+        }
+        if (this.locationY != null){
+            predicates.add(criteriaBuilder.equal(locationJoin.get("y"), this.locationY));
+        }
+        if (this.locationZ != null){
+            predicates.add(criteriaBuilder.equal(locationJoin.get("z"), this.locationZ));
+        }
+        if (this.locationName != null){
+            predicates.add(criteriaBuilder.like(locationJoin.get("name"), FieldConverter.stringLikeConvert(this.locationName)));
         }
         return predicates;
     }

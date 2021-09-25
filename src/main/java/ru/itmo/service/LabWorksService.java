@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 import ru.itmo.DAO.LabWorksDAO;
 import ru.itmo.converter.XMLConverter;
 import ru.itmo.entity.LabWork;
-import ru.itmo.utils.FieldConverter;
+import ru.itmo.converter.FieldConverter;
 import ru.itmo.utils.LabWorkParams;
 
 import jakarta.servlet.http.HttpServletRequest;

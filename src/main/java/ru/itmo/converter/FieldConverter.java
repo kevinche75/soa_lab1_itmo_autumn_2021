@@ -1,4 +1,4 @@
-package ru.itmo.utils;
+package ru.itmo.converter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import ru.itmo.entity.Difficulty;
@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class FieldConverter {
@@ -91,5 +92,9 @@ public class FieldConverter {
 
     public static String bodyToStringConvert(HttpServletRequest request) throws IOException {
         return request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    public static String removePrefixFieldConvert(String field, String prefix){
+        return field.replaceAll(prefix, "").toLowerCase();
     }
 }

@@ -1,7 +1,7 @@
 package ru.itmo.servlet;
 
 import ru.itmo.service.LabWorksService;
-import ru.itmo.utils.FieldConverter;
+import ru.itmo.converter.FieldConverter;
 import ru.itmo.utils.LabWorkParams;
 
 import jakarta.servlet.ServletException;
