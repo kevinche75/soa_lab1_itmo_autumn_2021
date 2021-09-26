@@ -9,6 +9,7 @@ import ru.itmo.utils.LabWorkParams;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.itmo.utils.LabWorksResult;
 
 import java.io.PrintWriter;
 import java.util.Optional;
@@ -24,7 +25,14 @@ public class LabWorksService {
     }
 
     public void getAllLabWorks(LabWorkParams params, HttpServletResponse response){
-
+        try {
+            LabWorksResult labWorksResult = dao.getAllLabWorks(params);
+            response.setStatus(200);
+            PrintWriter writer = response.getWriter();
+            writer.write(xmlConverter.toStr(labWorksResult));
+        } catch (Exception e){
+            this.getError(response);
+        }
     }
 
     @SneakyThrows
