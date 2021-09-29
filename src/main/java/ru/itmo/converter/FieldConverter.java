@@ -1,6 +1,7 @@
 package ru.itmo.converter;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.io.IOUtils;
 import ru.itmo.entity.Difficulty;
 
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class FieldConverter {
     }
 
     public static String bodyToStringConvert(HttpServletRequest request) throws IOException {
-        return request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        return IOUtils.toString(request.getReader());
     }
 
     public static String removePrefixFieldConvert(String field, String prefix){

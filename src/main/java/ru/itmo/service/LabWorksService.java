@@ -69,7 +69,8 @@ public class LabWorksService {
 
     public void createLabWork(HttpServletRequest request, HttpServletResponse response){
         try {
-            LabWork labWork = xmlConverter.fromStr(FieldConverter.bodyToStringConvert(request), LabWork.class);
+            String xmlStr = FieldConverter.bodyToStringConvert(request);
+            LabWork labWork = xmlConverter.fromStr(xmlStr, LabWork.class);
             Long id = dao.createLabWork(labWork);
             response.setStatus(200);
             response.getWriter().write(xmlConverter.toStr(id));

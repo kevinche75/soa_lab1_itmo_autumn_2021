@@ -36,7 +36,7 @@ public class LabWorkParams {
     String sortField;
     Boolean lessThanMaximalPointFlag;
 
-    public final static String DATE_PATTERN = "yyyy-MM-dd HH:mm";
+    public final static String DATE_PATTERN = "dd.MM.yyyy";
 
     public LabWorkParams(
             String name,

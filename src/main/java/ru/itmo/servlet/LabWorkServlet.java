@@ -73,6 +73,7 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         String pathInfo = req.getPathInfo();
         if (pathInfo == null){
             Boolean minNameFlag = FieldConverter.booleanConvert(req.getParameter(MINIMAL_NAME_FLAG));
@@ -96,6 +97,7 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         service.createLabWork(req, resp);
     }
 

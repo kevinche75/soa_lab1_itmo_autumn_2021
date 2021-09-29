@@ -19,11 +19,11 @@ import java.util.Optional;
 
 public class LabWorksDAO {
 
-    private void applyPagination(TypedQuery<LabWork> labWorkQuery, LabWorkParams params){
-        int startIndex = params.getPageIdx() * (params.getPageSize() - 1);
-        labWorkQuery.setFirstResult(startIndex);
-        labWorkQuery.setMaxResults(params.getPageSize());
-    }
+//    private void applyPagination(TypedQuery<LabWork> labWorkQuery, LabWorkParams params){
+//        int startIndex = params.getPageIdx() * (params.getPageSize() - 1);
+//        labWorkQuery.setFirstResult(startIndex);
+//        labWorkQuery.setMaxResults(params.getPageSize());
+//    }
 
     public LabWorksResult getAllLabWorks(LabWorkParams params){
         List<LabWork> labWorks = null;
@@ -59,15 +59,15 @@ public class LabWorksDAO {
 
             CriteriaQuery<LabWork> query = criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
             TypedQuery<LabWork> typedQuery = session.createQuery(query);
-            applyPagination(typedQuery, params);
+//            applyPagination(typedQuery, params);
             labWorks = typedQuery.getResultList();
 
-            CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-            countQuery.select(criteriaBuilder.count(countQuery.from(LabWork.class)));
-            countQuery.where(predicates.toArray(new Predicate[]{}));
-            Long count = session.createQuery(countQuery).getSingleResult();
+//            CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+//            countQuery.select(criteriaBuilder.count(countQuery.from(LabWork.class)));
+//            countQuery.where(predicates.toArray(new Predicate[]{}));
+//            Long count = session.createQuery(countQuery).getSingleResult();
 
-            result = new LabWorksResult((int) (count / params.getPageSize() + 1), params.getPageIdx(), count, labWorks);
+            result = new LabWorksResult(labWorks);
         } catch (Exception e){
             if (transaction != null) transaction.rollback();
             throw e;

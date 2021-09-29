@@ -13,19 +13,19 @@ import java.util.List;
 @XmlRootElement(name = "labworks_result")
 public class LabWorksResult {
 
-    @XmlElement
-    private final int totalPages;
-    @XmlElement
-    private final int currentPage;
-    @XmlElement
-    private final long totalLabWorks;
+//    @XmlElement
+//    private final int totalPages;
+//    @XmlElement
+//    private final int currentPage;
+//    @XmlElement
+//    private final long totalLabWorks;
     @XmlElementWrapper(name = "labworks")
     @XmlElement(name = "labwork")
     private final List<LabWork> list;
     public LabWorksResult(){
-        this.totalPages = 0;
-        this.currentPage = 0;
-        this.totalLabWorks = 0;
+//        this.totalPages = 0;
+//        this.currentPage = 0;
+//        this.totalLabWorks = 0;
         this.list = new ArrayList<>();
     }
 }
