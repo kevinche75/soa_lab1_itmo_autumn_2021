@@ -5,7 +5,9 @@ import org.apache.commons.io.IOUtils;
 import ru.itmo.entity.Difficulty;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -16,7 +18,8 @@ public class FieldConverter {
     public static LocalDateTime localDateTimeConvert(String date, String pattern){
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-            return LocalDateTime.parse(date, formatter);
+            LocalDate ld = LocalDate.parse(date, formatter);
+            return LocalDateTime.of(ld, LocalTime.of(0,0));
         } catch (Exception e){
             return null;
         }

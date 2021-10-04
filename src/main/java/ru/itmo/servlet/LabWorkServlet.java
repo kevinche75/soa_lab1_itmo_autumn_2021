@@ -17,7 +17,7 @@ public class LabWorkServlet extends HttpServlet {
     private static final String NAME_PARAM = "name";
     private static final String CREATION_DATE_PARAM = "creationDate";
     private static final String MINIMAL_POINT_PARAM = "minimalPoint";
-    private static final String MAXIMAL_POINT_PARAM = "maximalPoint";
+    private static final String MAXIMAL_POINT_PARAM = "maximumPoint";
     private static final String PERSONAL_QUALITIES_MAXIMUM_PARAM = "personalQualitiesMaximum";
     private static final String DIFFICULTY_PARAM = "difficulty";
     private static final String COORDINATES_X_PARAM = "coordinatesX";
@@ -27,8 +27,8 @@ public class LabWorkServlet extends HttpServlet {
     private static final String PAGE_SIZE_PARAM = "pageSize";
     private static final String SORT_FIELD_PARAM = "sortField";
 
-    private static final String PERSON_NAME_PARAM = "personName";
-    private static final String PERSON_WEIGHT_PARAM = "personWeight";
+    private static final String PERSON_NAME_PARAM = "authorName";
+    private static final String PERSON_WEIGHT_PARAM = "authorWeight";
 
     private static final String LOCATION_X_PARAM = "locationX";
     private static final String LOCATION_Y_PARAM = "locationY";
@@ -109,7 +109,12 @@ public class LabWorkServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
+        resp.setContentType("text/xml");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Access-Control-Allow-Methods", "DELETE");
+        String pathInfo = req.getPathInfo();
+        String[] parts = pathInfo.split("/");
+        service.deleteLabWork(FieldConverter.longConvert(parts[1]), resp);
     }
 
     @Override
@@ -119,7 +124,11 @@ public class LabWorkServlet extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doOptions(req, resp);
+        resp.setContentType("text/xml");
+        System.out.println("Delete");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        resp.setStatus(200);
     }
 
     @Override

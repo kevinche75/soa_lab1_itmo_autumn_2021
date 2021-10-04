@@ -48,8 +48,8 @@ public class LabWorksDAO {
             if (params.getSortField() != null){
                 if (params.getSortField().startsWith("coordinates")){
                     criteriaQuery.orderBy(criteriaBuilder.asc(coordinatesJoin.get(FieldConverter.removePrefixFieldConvert(params.getSortField(), "coordinates"))));
-                } else if (params.getSortField().startsWith("person")){
-                    criteriaQuery.orderBy(criteriaBuilder.asc(personJoin.get(FieldConverter.removePrefixFieldConvert(params.getSortField(), "person"))));
+                } else if (params.getSortField().startsWith("author")){
+                    criteriaQuery.orderBy(criteriaBuilder.asc(personJoin.get(FieldConverter.removePrefixFieldConvert(params.getSortField(), "author"))));
                 } else if (params.getSortField().startsWith("location")){
                     criteriaQuery.orderBy(criteriaBuilder.asc(locationJoin.get(FieldConverter.removePrefixFieldConvert(params.getSortField(), "location"))));
                 } else {
@@ -111,5 +111,26 @@ public class LabWorksDAO {
             if (transaction != null) transaction.rollback();
             throw e;
         }
+    }
+
+    public boolean deleteLabWork(Long id){
+        Transaction transaction = null;
+        boolean successful = false;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            LabWork lab = session.find(LabWork.class, id);
+            if (lab != null) {
+                session.delete(lab);
+                session.flush();
+                successful = true;
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return successful;
     }
 }

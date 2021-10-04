@@ -84,7 +84,7 @@ public class LabWork {
         Arrays
                 .stream(Person.class.getDeclaredFields())
                 .filter(field -> !field.getName().equals("location"))
-                .map(field -> FieldConverter.addPrefixFieldConvert("person", field.getName()))
+                .map(field -> FieldConverter.addPrefixFieldConvert("author", field.getName()))
                 .forEach(fieldList::add);
         Arrays
                 .stream(Location.class.getDeclaredFields())

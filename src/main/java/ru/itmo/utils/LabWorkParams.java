@@ -20,13 +20,13 @@ public class LabWorkParams {
     String name;
     LocalDateTime creationDate;
     Float minimalPoint;
-    Float maximalPoint;
+    Float maximumPoint;
     Long personalQualitiesMaximum;
     Difficulty difficulty;
     Integer coordinatesX;
     Double coordinatesY;
-    String personName;
-    Float personWeight;
+    String authorName;
+    Float authorWeight;
     Float locationX;
     Integer locationY;
     Integer locationZ;
@@ -42,13 +42,13 @@ public class LabWorkParams {
             String name,
             String creationDate,
             String minimalPoint,
-            String maximalPoint,
+            String maximumPoint,
             String personalQualitiesMaximum,
             String difficulty,
             String coordinatesX,
             String coordinatesY,
-            String personName,
-            String personWeight,
+            String authorName,
+            String authorWeight,
             String locationX,
             String locationY,
             String locationZ,
@@ -61,13 +61,13 @@ public class LabWorkParams {
         this.name = name;
         this.creationDate = FieldConverter.localDateTimeConvert(creationDate, DATE_PATTERN);
         this.minimalPoint = FieldConverter.floatConvert(minimalPoint);
-        this.maximalPoint = FieldConverter.floatConvert(maximalPoint);
+        this.maximumPoint = FieldConverter.floatConvert(maximumPoint);
         this.personalQualitiesMaximum = FieldConverter.longConvert(personalQualitiesMaximum);
         this.difficulty = FieldConverter.difficultyConvert(difficulty);
         this.coordinatesX = FieldConverter.intConvert(coordinatesX);
         this.coordinatesY = FieldConverter.doubleConvert(coordinatesY);
-        this.personName = personName;
-        this.personWeight = FieldConverter.floatConvert(personWeight);
+        this.authorName = authorName;
+        this.authorWeight = FieldConverter.floatConvert(authorWeight);
         this.locationX = FieldConverter.floatConvert(locationX);
         this.locationY = FieldConverter.intConvert(locationY);
         this.locationZ = FieldConverter.intConvert(locationZ);
@@ -95,8 +95,8 @@ public class LabWorkParams {
         if (this.minimalPoint != null){
             predicates.add(criteriaBuilder.equal(root.get("minimalPoint"), this.minimalPoint));
         }
-        if (this.maximalPoint != null){
-            predicates.add(criteriaBuilder.equal(root.get("maximalPoint"), this.maximalPoint));
+        if (this.maximumPoint != null){
+            predicates.add(criteriaBuilder.equal(root.get("maximumPoint"), this.maximumPoint));
         }
         if (this.personalQualitiesMaximum != null){
             predicates.add(criteriaBuilder.equal(root.get("personalQualitiesMaximum"), this.personalQualitiesMaximum));
@@ -110,11 +110,11 @@ public class LabWorkParams {
         if (this.coordinatesY != null){
             predicates.add(criteriaBuilder.equal(coordinatesJoin.get("y"), this.coordinatesY));
         }
-        if (this.personName != null){
-            predicates.add(criteriaBuilder.like(personJoin.get("name"), FieldConverter.stringLikeConvert(this.personName)));
+        if (this.authorName != null){
+            predicates.add(criteriaBuilder.like(personJoin.get("name"), FieldConverter.stringLikeConvert(this.authorName)));
         }
-        if (this.personWeight != null){
-            predicates.add(criteriaBuilder.equal(personJoin.get("weight"), this.personWeight));
+        if (this.authorWeight != null){
+            predicates.add(criteriaBuilder.equal(personJoin.get("weight"), this.authorWeight));
         }
         if (this.locationX != null){
             predicates.add(criteriaBuilder.equal(locationJoin.get("x"), this.locationX));
@@ -133,8 +133,8 @@ public class LabWorkParams {
 
     public List<Predicate> getLessMaximalPointPredicate(CriteriaBuilder criteriaBuilder, Root<LabWork> root){
         List<Predicate> predicates = new ArrayList<>();
-        if (this.maximalPoint != null){
-            predicates.add(criteriaBuilder.lessThan(root.get("maximalPoint"), this.maximalPoint));
+        if (this.maximumPoint != null){
+            predicates.add(criteriaBuilder.lessThan(root.get("maximalPoint"), this.maximumPoint));
         }
         return predicates;
     }

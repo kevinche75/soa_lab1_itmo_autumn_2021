@@ -10,7 +10,7 @@ public class XMLLocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
 
     @Override
     public LocalDateTime unmarshal(String s) throws Exception {
-        return LocalDateTime.parse(s);
+        return FieldConverter.localDateTimeConvert(s, LabWorkParams.DATE_PATTERN);
     }
 
     @Override

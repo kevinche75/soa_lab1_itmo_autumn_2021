@@ -73,7 +73,6 @@ public class LabWorksService {
             LabWork labWork = xmlConverter.fromStr(xmlStr, LabWork.class);
             Long id = dao.createLabWork(labWork);
             response.setStatus(200);
-            response.getWriter().write(xmlConverter.toStr(id));
         } catch (Exception e){
             getError(response);
         }
@@ -92,5 +91,14 @@ public class LabWorksService {
         } catch (Exception e){
             getError(response);
         }
+    }
+
+    public void deleteLabWork(Long id, HttpServletResponse response){
+        if (id == null){
+            getError(response);
+            return;
+        }
+        boolean result = dao.deleteLabWork(id);
+        if (!result) getError(response);
     }
 }
