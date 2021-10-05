@@ -1,8 +1,10 @@
 package ru.itmo.DAO;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projections;
 import ru.itmo.converter.FieldConverter;
 import ru.itmo.entity.Coordinates;
 import ru.itmo.entity.LabWork;
@@ -60,12 +62,13 @@ public class LabWorksDAO {
             CriteriaQuery<LabWork> query = criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
             TypedQuery<LabWork> typedQuery = session.createQuery(query);
             applyPagination(typedQuery, params);
-            labWorks = typedQuery.getResultList();
 
             CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
             countQuery.select(criteriaBuilder.count(countQuery.from(LabWork.class)));
             countQuery.where(predicates.toArray(new Predicate[]{}));
             Long count = session.createQuery(countQuery).getSingleResult();
+
+            labWorks = typedQuery.getResultList();
 
             result = new LabWorksResult(count, labWorks);
         } catch (Exception e){

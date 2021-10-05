@@ -112,7 +112,6 @@ public class LabWorkServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
         resp.addHeader("Access-Control-Allow-Origin", "*");
-        resp.addHeader("Access-Control-Allow-Methods", "DELETE");
         String pathInfo = req.getPathInfo();
         String[] parts = pathInfo.split("/");
         service.deleteLabWork(FieldConverter.longConvert(parts[1]), resp);

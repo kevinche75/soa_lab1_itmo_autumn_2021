@@ -10,7 +10,9 @@ import ru.itmo.utils.LabWorkParams;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itmo.utils.LabWorksResult;
+import ru.itmo.utils.ServerResponse;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Optional;
 
@@ -24,6 +26,24 @@ public class LabWorksService {
         dao = new LabWorksDAO();
     }
 
+    public void getError(HttpServletResponse response, int code, String message){
+
+        try {
+            ServerResponse serverResponse = new ServerResponse(message);
+            PrintWriter writer = response.getWriter();
+            writer.write(xmlConverter.toStr(serverResponse));
+            response.setStatus(code);
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.setStatus(500);
+        }
+
+    }
+
+    public void getError(HttpServletResponse response, int code){
+        ServerResponse serverResponse = new ServerResponse("message");
+    }
+
     public void getAllLabWorks(LabWorkParams params, HttpServletResponse response){
         try {
             LabWorksResult labWorksResult = dao.getAllLabWorks(params);
@@ -31,14 +51,14 @@ public class LabWorksService {
             PrintWriter writer = response.getWriter();
             writer.write(xmlConverter.toStr(labWorksResult));
         } catch (Exception e){
-            this.getError(response);
+            this.getError(response, 500);
         }
     }
 
     @SneakyThrows
     public void getLabWork(Long id, HttpServletResponse response){
         if (id == null){
-            this.getError(response);
+            this.getError(response, 500);
             return;
         }
         Optional<LabWork> labWork = dao.getLabWork(id);
@@ -47,7 +67,7 @@ public class LabWorksService {
             PrintWriter writer = response.getWriter();
             writer.write(xmlConverter.toStr(labWork.get()));
         } else {
-            this.getError(response);
+            this.getError(response, 404, "No labWork with such id:" + id);
         }
     }
 
@@ -63,10 +83,6 @@ public class LabWorksService {
 
     }
 
-    public void getError(HttpServletResponse response){
-
-    }
-
     public void createLabWork(HttpServletRequest request, HttpServletResponse response){
         try {
             String xmlStr = FieldConverter.bodyToStringConvert(request);
@@ -74,7 +90,7 @@ public class LabWorksService {
             Long id = dao.createLabWork(labWork);
             response.setStatus(200);
         } catch (Exception e){
-            getError(response);
+            getError(response, 500);
         }
     }
 
@@ -87,18 +103,19 @@ public class LabWorksService {
                 labWorkPresent.update(labWorkUpdate);
                 dao.updateLabWork(labWorkPresent);
                 response.setStatus(200);
-            } else getError(response);
+            } else getError(response, 500);
         } catch (Exception e){
-            getError(response);
+            getError(response, 500);
         }
     }
 
     public void deleteLabWork(Long id, HttpServletResponse response){
         if (id == null){
-            getError(response);
+            getError(response, 500);
             return;
         }
         boolean result = dao.deleteLabWork(id);
-        if (!result) getError(response);
+        if (!result) getError(response, 500);
+        else response.setStatus(200);
     }
 }
