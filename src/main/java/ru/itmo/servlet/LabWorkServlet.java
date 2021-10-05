@@ -104,6 +104,7 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/ml");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         service.updateLabWork(req, resp);
     }
 
@@ -125,7 +126,6 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
-        System.out.println("Delete");
         resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
         resp.setStatus(200);
