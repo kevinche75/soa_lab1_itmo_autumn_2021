@@ -35,9 +35,9 @@ public class LabWorkServlet extends HttpServlet {
     private static final String LOCATION_Z_PARAM = "locationZ";
     private static final String LOCATION_NAME_PARAM = "locationName";
 
-    private static final String MINIMAL_NAME_FLAG = "minName";
-    private static final String COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG = "count";
-    private static final String LESS_MAXIMUM_POINT_FLAG = "lessMaximumPoint";
+    private static final String MINIMAL_NAME_FLAG = "min_name";
+    private static final String COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG = "count_personal_maximum";
+    private static final String LESS_MAXIMUM_POINT_FLAG = "less_maximum_point";
 
     private LabWorksService service;
 
@@ -59,8 +59,7 @@ public class LabWorkServlet extends HttpServlet {
                 request.getParameter(LOCATION_NAME_PARAM),
                 request.getParameter(PAGE_IDX_PARAM),
                 request.getParameter(PAGE_SIZE_PARAM),
-                request.getParameter(SORT_FIELD_PARAM),
-                request.getParameter(LESS_MAXIMUM_POINT_FLAG)
+                request.getParameter(SORT_FIELD_PARAM)
         );
     }
 
@@ -76,21 +75,26 @@ public class LabWorkServlet extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
         String pathInfo = req.getPathInfo();
         if (pathInfo == null){
-            Boolean minNameFlag = FieldConverter.booleanConvert(req.getParameter(MINIMAL_NAME_FLAG));
-            if (minNameFlag != null && minNameFlag){
-                service.getMinName();
-                return;
-            }
-            Boolean count = FieldConverter.booleanConvert(req.getParameter(COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG));
-            if (count != null && count){
-                service.countPersonalQualitiesMaximum(FieldConverter.longConvert(req.getParameter(PERSONAL_QUALITIES_MAXIMUM_PARAM)));
-                return;
-            }
             LabWorkParams filterParams = getLabWorksParams(req);
             service.getAllLabWorks(filterParams, resp);
         } else {
             String[] parts = pathInfo.split("/");
-            service.getLabWork(FieldConverter.longConvert(parts[1]), resp);
+            switch (parts[1]) {
+                case LESS_MAXIMUM_POINT_FLAG:
+                    LabWorkParams filterParams = getLabWorksParams(req);
+                    filterParams.setLessMaximalPointFlag(true);
+                    service.getAllLabWorks(filterParams, resp);
+                    break;
+                case MINIMAL_NAME_FLAG:
+                    service.getMinName(resp);
+                    break;
+                case COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG:
+                    service.countPersonalQualitiesMaximum(parts[2], resp);
+                    break;
+                default:
+                    service.getLabWork(parts[1], resp);
+                    break;
+            }
         }
     }
 

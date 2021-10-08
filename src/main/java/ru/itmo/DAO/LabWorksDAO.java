@@ -1,21 +1,19 @@
 package ru.itmo.DAO;
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Projections;
 import ru.itmo.converter.FieldConverter;
 import ru.itmo.entity.Coordinates;
 import ru.itmo.entity.LabWork;
 import ru.itmo.entity.Location;
 import ru.itmo.entity.Person;
-import ru.itmo.utils.LabWorkParams;
 import ru.itmo.utils.HibernateUtil;
+import ru.itmo.utils.LabWorkParams;
 import ru.itmo.utils.LabWorksResult;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,11 +39,7 @@ public class LabWorksDAO {
             Join<Person, Location> locationJoin = personJoin.join("location");
             List<Predicate> predicates;
 
-            if (params.getLessThanMaximalPointFlag()){
-                predicates = params.getLessMaximalPointPredicate(criteriaBuilder, root);
-            } else {
-                 predicates = params.getPredicates(criteriaBuilder, root, coordinatesJoin, personJoin, locationJoin);
-            }
+            predicates = params.getPredicates(criteriaBuilder, root, coordinatesJoin, personJoin, locationJoin);
 
             if (params.getSortField() != null){
                 if (params.getSortField().startsWith("coordinates")){
@@ -63,12 +57,11 @@ public class LabWorksDAO {
             TypedQuery<LabWork> typedQuery = session.createQuery(query);
             applyPagination(typedQuery, params);
 
-            CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-            countQuery.select(criteriaBuilder.count(countQuery.from(LabWork.class)));
-            countQuery.where(predicates.toArray(new Predicate[]{}));
-            Long count = session.createQuery(countQuery).getSingleResult();
-
             labWorks = typedQuery.getResultList();
+
+            query = criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
+            typedQuery = session.createQuery(query);
+            long count = typedQuery.getResultList().size();
 
             result = new LabWorksResult(count, labWorks);
         } catch (Exception e){
@@ -135,5 +128,56 @@ public class LabWorksDAO {
             e.printStackTrace();
         }
         return successful;
+    }
+
+    public LabWork getMinName(){
+        List<LabWork> labWorks;
+        LabWork result = null;
+        Transaction transaction = null;
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<LabWork> criteriaQuery = criteriaBuilder.createQuery(LabWork.class);
+            Root<LabWork> root = criteriaQuery.from(LabWork.class);
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
+
+            CriteriaQuery<LabWork> query = criteriaQuery.select(root);
+            TypedQuery<LabWork> typedQuery = session.createQuery(query);
+            typedQuery.setFirstResult(0);
+            typedQuery.setMaxResults(1);
+
+            labWorks = typedQuery.getResultList();
+
+            if (labWorks.size() > 0){
+                result = labWorks.get(0);
+            }
+        } catch (Exception e){
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
+        return result;
+    }
+    
+    public Long countPQM(Long pqm){
+        Transaction transaction = null;
+        long count;
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<LabWork> criteriaQuery = criteriaBuilder.createQuery(LabWork.class);
+            Root<LabWork> root = criteriaQuery.from(LabWork.class);
+
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.get("personalQualitiesMaximum"), pqm));
+
+            CriteriaQuery<LabWork> query = criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
+            TypedQuery<LabWork> typedQuery = session.createQuery(query);
+            count = typedQuery.getResultList().size();
+
+        } catch (Exception e){
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
+        return count;
     }
 }

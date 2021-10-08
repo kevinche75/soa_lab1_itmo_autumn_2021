@@ -1,6 +1,5 @@
 package ru.itmo.service;
 
-import lombok.SneakyThrows;
 import ru.itmo.DAO.LabWorksDAO;
 import ru.itmo.converter.XMLConverter;
 import ru.itmo.entity.LabWork;
@@ -26,7 +25,7 @@ public class LabWorksService {
         dao = new LabWorksDAO();
     }
 
-    public void getError(HttpServletResponse response, int code, String message){
+    public void getInfo(HttpServletResponse response, int code, String message){
 
         try {
             ServerResponse serverResponse = new ServerResponse(message);
@@ -40,7 +39,7 @@ public class LabWorksService {
 
     }
 
-    public void getError(HttpServletResponse response, int code){
+    public void getInfo(HttpServletResponse response, int code){
         ServerResponse serverResponse = new ServerResponse("message");
     }
 
@@ -51,32 +50,61 @@ public class LabWorksService {
             PrintWriter writer = response.getWriter();
             writer.write(xmlConverter.toStr(labWorksResult));
         } catch (Exception e){
-            this.getError(response, 500);
+            this.getInfo(response, 500, "Server error, try again");
         }
     }
 
-    @SneakyThrows
-    public void getLabWork(Long id, HttpServletResponse response){
-        if (id == null){
-            this.getError(response, 500);
-            return;
+    public void getLabWork(String str_id, HttpServletResponse response){
+        try {
+            Long id = FieldConverter.longConvert(str_id);
+            if (id == null){
+                this.getInfo(response, 400, "Can't convert" + str_id + "to number");
+                return;
+            }
+            Optional<LabWork> labWork = dao.getLabWork(id);
+            if (labWork.isPresent()){
+                response.setStatus(200);
+                PrintWriter writer = response.getWriter();
+                writer.write(xmlConverter.toStr(labWork.get()));
+            } else {
+                this.getInfo(response, 404, "No labWork with such id: " + id);
+            }
+        } catch (Exception e){
+            this.getInfo(response, 500, "Server error, try again");
         }
-        Optional<LabWork> labWork = dao.getLabWork(id);
-        if (labWork.isPresent()){
+    }
+
+    public void getMinName(HttpServletResponse response){
+        try{
+            LabWork lab = dao.getMinName();
+            if (lab == null){
+                this.getInfo(response, 404, "No labs");
+                return;
+            }
             response.setStatus(200);
             PrintWriter writer = response.getWriter();
-            writer.write(xmlConverter.toStr(labWork.get()));
-        } else {
-            this.getError(response, 404, "No labWork with such id:" + id);
+            writer.write(xmlConverter.toStr(lab));
+        } catch (Exception e){
+            this.getInfo(response, 500, "Server error, try again");
         }
     }
 
-    public void getMinName(){
-
-    }
-
-    public void countPersonalQualitiesMaximum(Long personalQualitiesMaximum){
-
+    public void countPersonalQualitiesMaximum(String str_pqm, HttpServletResponse response){
+        try {
+            Long pqm = FieldConverter.longConvert(str_pqm);
+            if (pqm == null){
+                this.getInfo(response, 400, "Can't convert" + str_pqm + "to number");
+                return;
+            }
+            Long count = dao.countPQM(pqm);
+            if (count != null){
+                this.getInfo(response, 200, "Count of labs with PQM: " + str_pqm + " is: " + count);
+            } else {
+                this.getInfo(response, 500, "Server error, try again");
+            }
+        } catch (Exception e){
+            this.getInfo(response, 500, "Server error, try again");
+        }
     }
 
     public void getLessMaximumPoint(LabWorkParams labWorkParams){
@@ -90,7 +118,7 @@ public class LabWorksService {
             Long id = dao.createLabWork(labWork);
             response.setStatus(200);
         } catch (Exception e){
-            getError(response, 500);
+            getInfo(response, 500);
         }
     }
 
@@ -103,19 +131,19 @@ public class LabWorksService {
                 labWorkPresent.update(labWorkUpdate);
                 dao.updateLabWork(labWorkPresent);
                 response.setStatus(200);
-            } else getError(response, 500);
+            } else getInfo(response, 500);
         } catch (Exception e){
-            getError(response, 500);
+            getInfo(response, 500);
         }
     }
 
     public void deleteLabWork(Long id, HttpServletResponse response){
         if (id == null){
-            getError(response, 500);
+            getInfo(response, 500);
             return;
         }
         boolean result = dao.deleteLabWork(id);
-        if (!result) getError(response, 500);
+        if (!result) getInfo(response, 500);
         else response.setStatus(200);
     }
 }

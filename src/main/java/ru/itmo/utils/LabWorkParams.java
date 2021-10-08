@@ -2,6 +2,7 @@ package ru.itmo.utils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.itmo.converter.FieldConverter;
 import ru.itmo.entity.*;
 
@@ -34,7 +35,8 @@ public class LabWorkParams {
     Integer pageIdx;
     Integer pageSize;
     String sortField;
-    Boolean lessThanMaximalPointFlag;
+    @Setter
+    boolean lessMaximalPointFlag = false;
 
     public final static String DATE_PATTERN = "dd.MM.yyyy";
 
@@ -55,8 +57,7 @@ public class LabWorkParams {
             String locationName,
             String pageIdx,
             String pageSize,
-            String sortField,
-            String lessThanMaximalPointFlag
+            String sortField
     ) {
         this.name = name;
         this.creationDate = FieldConverter.localDateTimeConvert(creationDate, DATE_PATTERN);
@@ -75,7 +76,6 @@ public class LabWorkParams {
         this.pageIdx = Math.max(FieldConverter.intConvert(pageIdx, 1), 1);
         this.pageSize = Math.max(FieldConverter.intConvert(pageSize, 10), 1);
         this.sortField = FieldConverter.sortFieldConvert(sortField, LabWork.getAllFields());
-        this.lessThanMaximalPointFlag = FieldConverter.booleanConvert(lessThanMaximalPointFlag);
     }
 
     public List<Predicate> getPredicates(
@@ -96,7 +96,11 @@ public class LabWorkParams {
             predicates.add(criteriaBuilder.equal(root.get("minimalPoint"), this.minimalPoint));
         }
         if (this.maximumPoint != null){
+            if(this.lessMaximalPointFlag){
+                predicates.add(criteriaBuilder.lessThan(root.get("maximumPoint"), this.maximumPoint));
+            } else {
             predicates.add(criteriaBuilder.equal(root.get("maximumPoint"), this.maximumPoint));
+            }
         }
         if (this.personalQualitiesMaximum != null){
             predicates.add(criteriaBuilder.equal(root.get("personalQualitiesMaximum"), this.personalQualitiesMaximum));
