@@ -3,8 +3,8 @@ package ru.itmo.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ru.itmo.converter.XMLLocalDateTimeAdapter;
 import ru.itmo.converter.FieldConverter;
+import ru.itmo.converter.XMLLocalDateTimeAdapter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

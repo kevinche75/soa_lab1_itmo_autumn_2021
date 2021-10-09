@@ -140,12 +140,4 @@ public class LabWorkParams {
         }
         return predicates;
     }
-
-    public List<Predicate> getLessMaximalPointPredicate(CriteriaBuilder criteriaBuilder, Root<LabWork> root){
-        List<Predicate> predicates = new ArrayList<>();
-        if (this.maximumPoint != null){
-            predicates.add(criteriaBuilder.lessThan(root.get("maximalPoint"), this.maximumPoint));
-        }
-        return predicates;
-    }
 }

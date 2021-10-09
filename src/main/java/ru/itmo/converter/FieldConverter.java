@@ -61,7 +61,7 @@ public class FieldConverter {
 
     private static Float getFloat(String number, String fieldName, ValidatorResult validatorResult) {
         try {
-            return Float.parseFloat(number);
+            return Float.parseFloat(number.replace(",", "."));
         } catch (Exception e) {
             validatorResult.addMessage(String.format("Couldn't convert %s: %s to decimal number", fieldName, number));
             return null;
@@ -173,7 +173,7 @@ public class FieldConverter {
 
     private static Double getDouble(String number, String fieldName, ValidatorResult validatorResult) {
         try {
-            return Double.parseDouble(number);
+            return Double.parseDouble(number.replace(",", "."));
         } catch (Exception e) {
             validatorResult.addMessage(String.format("Couldn't convert %s: %s to decimal number", fieldName, number));
             return null;
