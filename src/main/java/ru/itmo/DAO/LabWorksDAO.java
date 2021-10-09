@@ -10,6 +10,7 @@ import ru.itmo.entity.Person;
 import ru.itmo.utils.HibernateUtil;
 import ru.itmo.utils.LabWorkParams;
 import ru.itmo.utils.LabWorksResult;
+import ru.itmo.validator.ValidatorResult;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
@@ -109,7 +110,7 @@ public class LabWorksDAO {
         }
     }
 
-    public boolean deleteLabWork(Long id){
+    public boolean deleteLabWork(Long id, ValidatorResult validatorResult){
         Transaction transaction = null;
         boolean successful = false;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

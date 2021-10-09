@@ -1,14 +1,13 @@
 package ru.itmo.servlet;
 
-import ru.itmo.service.LabWorksService;
-import ru.itmo.converter.FieldConverter;
-import ru.itmo.utils.LabWorkParams;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.itmo.service.LabWorksService;
+import ru.itmo.utils.LabWorkParams;
+
 import java.io.IOException;
 
 @WebServlet("/labworks/*")
@@ -42,7 +41,8 @@ public class LabWorkServlet extends HttpServlet {
     private LabWorksService service;
 
     private LabWorkParams getLabWorksParams(HttpServletRequest request){
-        return new LabWorkParams(
+        LabWorkParams params = new LabWorkParams();
+        params.setLabWorkParams(
                 request.getParameter(NAME_PARAM),
                 request.getParameter(CREATION_DATE_PARAM),
                 request.getParameter(MINIMAL_POINT_PARAM),
@@ -61,6 +61,7 @@ public class LabWorkServlet extends HttpServlet {
                 request.getParameter(PAGE_SIZE_PARAM),
                 request.getParameter(SORT_FIELD_PARAM)
         );
+        return params;
     }
 
     @Override
@@ -118,7 +119,7 @@ public class LabWorkServlet extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
         String pathInfo = req.getPathInfo();
         String[] parts = pathInfo.split("/");
-        service.deleteLabWork(FieldConverter.longConvert(parts[1]), resp);
+        service.deleteLabWork(parts[1], resp);
     }
 
     @Override

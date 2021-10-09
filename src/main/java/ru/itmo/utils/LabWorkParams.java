@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.itmo.converter.FieldConverter;
 import ru.itmo.entity.*;
+import ru.itmo.validator.ValidatorResult;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 public class LabWorkParams {
 
     String name;
@@ -38,9 +38,15 @@ public class LabWorkParams {
     @Setter
     boolean lessMaximalPointFlag = false;
 
+    private ValidatorResult validatorResult;
+
+    public LabWorkParams(){
+        validatorResult = new ValidatorResult();
+    }
+
     public final static String DATE_PATTERN = "dd.MM.yyyy";
 
-    public LabWorkParams(
+    public void setLabWorkParams(
             String name,
             String creationDate,
             String minimalPoint,
@@ -60,22 +66,22 @@ public class LabWorkParams {
             String sortField
     ) {
         this.name = name;
-        this.creationDate = FieldConverter.localDateTimeConvert(creationDate, DATE_PATTERN);
-        this.minimalPoint = FieldConverter.floatConvert(minimalPoint);
-        this.maximumPoint = FieldConverter.floatConvert(maximumPoint);
-        this.personalQualitiesMaximum = FieldConverter.longConvert(personalQualitiesMaximum);
-        this.difficulty = FieldConverter.difficultyConvert(difficulty);
-        this.coordinatesX = FieldConverter.intConvert(coordinatesX);
-        this.coordinatesY = FieldConverter.doubleConvert(coordinatesY);
+        this.creationDate = FieldConverter.localFilterDateTimeConvert(creationDate, "LabWork Creation Date", DATE_PATTERN, validatorResult);
+        this.minimalPoint = FieldConverter.floatFilterConvert(minimalPoint, "LabWork MinimalPoint", validatorResult);
+        this.maximumPoint = FieldConverter.floatFilterConvert(maximumPoint, "LabWork MaximalPoint", validatorResult);
+        this.personalQualitiesMaximum = FieldConverter.longFilterConvert(personalQualitiesMaximum, "LabWork PersonalQualitiesMaximal", validatorResult);
+        this.difficulty = FieldConverter.difficultyFilterConvert(difficulty, "LabWork Difficulty", validatorResult);
+        this.coordinatesX = FieldConverter.intFilterConvert(coordinatesX, "Coordinates X", validatorResult);
+        this.coordinatesY = FieldConverter.doubleFilterConvert(coordinatesY, "Coordinates Y", validatorResult);
         this.authorName = authorName;
-        this.authorWeight = FieldConverter.floatConvert(authorWeight);
-        this.locationX = FieldConverter.floatConvert(locationX);
-        this.locationY = FieldConverter.intConvert(locationY);
-        this.locationZ = FieldConverter.intConvert(locationZ);
+        this.authorWeight = FieldConverter.floatFilterConvert(authorWeight, "Author Weight", validatorResult);
+        this.locationX = FieldConverter.floatFilterConvert(locationX, "Location X", validatorResult);
+        this.locationY = FieldConverter.intFilterConvert(locationY, "Location Y", validatorResult);
+        this.locationZ = FieldConverter.intFilterConvert(locationZ, "Location Z", validatorResult);
         this.locationName = locationName;
         this.pageIdx = Math.max(FieldConverter.intConvert(pageIdx, 1), 1);
         this.pageSize = Math.max(FieldConverter.intConvert(pageSize, 10), 1);
-        this.sortField = FieldConverter.sortFieldConvert(sortField, LabWork.getAllFields());
+        this.sortField = FieldConverter.sortFieldFilterConvert(sortField, LabWork.getAllFields(), validatorResult);
     }
 
     public List<Predicate> getPredicates(
@@ -99,7 +105,7 @@ public class LabWorkParams {
             if(this.lessMaximalPointFlag){
                 predicates.add(criteriaBuilder.lessThan(root.get("maximumPoint"), this.maximumPoint));
             } else {
-            predicates.add(criteriaBuilder.equal(root.get("maximumPoint"), this.maximumPoint));
+                predicates.add(criteriaBuilder.equal(root.get("maximumPoint"), this.maximumPoint));
             }
         }
         if (this.personalQualitiesMaximum != null){
