@@ -72,7 +72,7 @@ public class LabWorksDAO {
         return result;
     }
 
-    public Optional<LabWork> getLabWork(long id){
+    public Optional<LabWork> getLabWork(Long id){
         Transaction transaction;
         LabWork labWork = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
@@ -81,6 +81,7 @@ public class LabWorksDAO {
             transaction.commit();
         } catch (Exception e){
             e.printStackTrace();
+            throw e;
         }
         return Optional.ofNullable(labWork);
     }
