@@ -146,6 +146,7 @@ public class LabWorksService {
             Validator.validateId(stringLabWorkUpdate, validatorResult);
             if (!validatorResult.isStatus()){
                 getInfo(response, 400, validatorResult.getMessage());
+                return;
             }
             LabWork labWorkUpdate = xmlConverter.fromStr(xmlStr, LabWork.class);
             Optional<LabWork> lab = dao.getLabWork(labWorkUpdate.getId());
