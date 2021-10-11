@@ -73,7 +73,6 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
-        resp.addHeader("Access-Control-Allow-Origin", "*");
         String pathInfo = req.getPathInfo();
         if (pathInfo == null){
             LabWorkParams filterParams = getLabWorksParams(req);
@@ -102,21 +101,18 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
-        resp.addHeader("Access-Control-Allow-Origin", "*");
         service.createLabWork(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/ml");
-        resp.addHeader("Access-Control-Allow-Origin", "*");
         service.updateLabWork(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
-        resp.addHeader("Access-Control-Allow-Origin", "*");
         String pathInfo = req.getPathInfo();
         String[] parts = pathInfo.split("/");
         service.deleteLabWork(parts[1], resp);
@@ -130,7 +126,6 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
-        resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
         resp.setStatus(200);
     }

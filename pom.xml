@@ -18,7 +18,7 @@
         <jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
         <hibernate-core.version>5.5.6.Final</hibernate-core.version>
         <postgresql.version>42.2.23</postgresql.version>
-        <frontend-dir>${project.basedir}/../soa-fe</frontend-dir>
+        <frontend-dir>${project.basedir}/web</frontend-dir>
         <lombok.version>1.18.20</lombok.version>
     </properties>
 
@@ -80,6 +80,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

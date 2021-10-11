@@ -75,7 +75,7 @@ public class LabWorksService {
                 PrintWriter writer = response.getWriter();
                 writer.write(xmlConverter.toStr(labWork.get()));
             } else {
-                this.getInfo(response, 404, "No labWork with such id: " + id);
+                this.getInfo(response, 400, "No labWork with such id: " + id);
             }
         } catch (Exception e){
             this.getInfo(response, 500, "Server error, try again");
@@ -86,7 +86,7 @@ public class LabWorksService {
         try{
             LabWork lab = dao.getMinName();
             if (lab == null){
-                this.getInfo(response, 404, "No labs");
+                this.getInfo(response, 400, "No labs");
                 return;
             }
             response.setStatus(200);
@@ -155,7 +155,7 @@ public class LabWorksService {
                 labWorkPresent.update(labWorkUpdate);
                 dao.updateLabWork(labWorkPresent);
                 response.setStatus(200);
-            } else getInfo(response, 404, "No LabWork with such id: " + labWorkUpdate.getId());
+            } else getInfo(response, 400, "No LabWork with such id: " + labWorkUpdate.getId());
         } catch (JAXBException e){
             this.getInfo(response, 400, "Can't understand data structure");
         }
