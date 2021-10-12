@@ -79,21 +79,25 @@ public class LabWorkServlet extends HttpServlet {
             service.getAllLabWorks(filterParams, resp);
         } else {
             String[] parts = pathInfo.split("/");
-            switch (parts[1]) {
-                case LESS_MAXIMUM_POINT_FLAG:
-                    LabWorkParams filterParams = getLabWorksParams(req);
-                    filterParams.setLessMaximalPointFlag(true);
-                    service.getAllLabWorks(filterParams, resp);
-                    break;
-                case MINIMAL_NAME_FLAG:
-                    service.getMinName(resp);
-                    break;
-                case COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG:
-                    service.countPersonalQualitiesMaximum(parts[2], resp);
-                    break;
-                default:
-                    service.getLabWork(parts[1], resp);
-                    break;
+            if (parts.length > 1) {
+                switch (parts[1]) {
+                    case LESS_MAXIMUM_POINT_FLAG:
+                        LabWorkParams filterParams = getLabWorksParams(req);
+                        filterParams.setLessMaximalPointFlag(true);
+                        service.getAllLabWorks(filterParams, resp);
+                        break;
+                    case MINIMAL_NAME_FLAG:
+                        service.getMinName(resp);
+                        break;
+                    case COUNT_PERSONAL_QUALITIES_MAXIMUM_FLAG:
+                        service.countPersonalQualitiesMaximum(parts[2], resp);
+                        break;
+                    default:
+                        service.getLabWork(parts[1], resp);
+                        break;
+                }
+            } else {
+                service.getInfo(resp, 400, "Unknown query");
             }
         }
     }
@@ -107,15 +111,33 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/ml");
-        service.updateLabWork(req, resp);
+        String pathInfo = req.getPathInfo();
+        if (pathInfo != null) {
+            String[] parts = pathInfo.split("/");
+            if (parts.length > 1) {
+                service.updateLabWork(parts[1], req, resp);
+            } else {
+                service.getInfo(resp, 400, "Unknown query");
+            }
+        } else {
+            service.getInfo(resp, 400, "Unknown query");
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
         String pathInfo = req.getPathInfo();
-        String[] parts = pathInfo.split("/");
-        service.deleteLabWork(parts[1], resp);
+        if (pathInfo != null) {
+            String[] parts = pathInfo.split("/");
+            if (parts.length > 1) {
+                service.deleteLabWork(parts[1], resp);
+            } else {
+                service.getInfo(resp, 400, "Unknown query");
+            }
+        } else {
+            service.getInfo(resp, 400, "Unknown query");
+        }
     }
 
     @Override
