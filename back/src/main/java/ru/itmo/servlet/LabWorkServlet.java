@@ -111,16 +111,30 @@ public class LabWorkServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/ml");
-        service.updateLabWork(req, resp);
+        String pathInfo = req.getPathInfo();
+        if (pathInfo != null) {
+            String[] parts = pathInfo.split("/");
+            if (parts.length > 1) {
+                service.updateLabWork(parts[1], req, resp);
+            } else {
+                service.getInfo(resp, 400, "Unknown query");
+            }
+        } else {
+            service.getInfo(resp, 400, "Unknown query");
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/xml");
         String pathInfo = req.getPathInfo();
-        String[] parts = pathInfo.split("/");
-        if (parts.length > 1) {
-            service.deleteLabWork(parts[1], resp);
+        if (pathInfo != null) {
+            String[] parts = pathInfo.split("/");
+            if (parts.length > 1) {
+                service.deleteLabWork(parts[1], resp);
+            } else {
+                service.getInfo(resp, 400, "Unknown query");
+            }
         } else {
             service.getInfo(resp, 400, "Unknown query");
         }

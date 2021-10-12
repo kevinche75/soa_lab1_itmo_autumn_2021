@@ -121,6 +121,9 @@ public class LabWorksDAO {
                 session.delete(lab);
                 session.flush();
                 successful = true;
+            } else {
+                validatorResult.addMessage("No LabWork with such Id: " + id);
+                validatorResult.setCode(404);
             }
             transaction.commit();
         } catch (Exception e) {
@@ -128,6 +131,8 @@ public class LabWorksDAO {
                 transaction.rollback();
             }
             e.printStackTrace();
+            validatorResult.addMessage("Server error, try again");
+            validatorResult.setCode(500);
         }
         return successful;
     }

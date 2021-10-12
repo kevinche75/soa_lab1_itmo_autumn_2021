@@ -75,7 +75,7 @@ public class LabWorksService {
                 PrintWriter writer = response.getWriter();
                 writer.write(xmlConverter.toStr(labWork.get()));
             } else {
-                this.getInfo(response, 400, "No labWork with such id: " + id);
+                this.getInfo(response, 404, "No labWork with such id: " + id);
             }
         } catch (Exception e){
             this.getInfo(response, 500, "Server error, try again");
@@ -86,7 +86,7 @@ public class LabWorksService {
         try{
             LabWork lab = dao.getMinName();
             if (lab == null){
-                this.getInfo(response, 400, "No labs");
+                this.getInfo(response, 404, "No labs");
                 return;
             }
             response.setStatus(200);
@@ -137,11 +137,12 @@ public class LabWorksService {
         }
     }
 
-    public void updateLabWork(HttpServletRequest request, HttpServletResponse response){
+    public void updateLabWork(String str_id, HttpServletRequest request, HttpServletResponse response){
         try {
             String xmlStr = FieldConverter.bodyToStringConvert(request);
             ru.itmo.stringEntity.LabWork stringLabWorkUpdate = xmlConverter.fromStr(xmlStr, ru.itmo.stringEntity.LabWork.class);
             ValidatorResult validatorResult = Validator.validateLabWork(stringLabWorkUpdate);
+            Long id = FieldConverter.longConvert(str_id, "Delete id", validatorResult);
             Validator.validateCreationDate(stringLabWorkUpdate, validatorResult);
             Validator.validateId(stringLabWorkUpdate, validatorResult);
             if (!validatorResult.isStatus()){
@@ -149,13 +150,13 @@ public class LabWorksService {
                 return;
             }
             LabWork labWorkUpdate = xmlConverter.fromStr(xmlStr, LabWork.class);
-            Optional<LabWork> lab = dao.getLabWork(labWorkUpdate.getId());
+            Optional<LabWork> lab = dao.getLabWork(id);
             if (lab.isPresent()) {
                 LabWork labWorkPresent = lab.get();
                 labWorkPresent.update(labWorkUpdate);
                 dao.updateLabWork(labWorkPresent);
                 response.setStatus(200);
-            } else getInfo(response, 400, "No LabWork with such id: " + labWorkUpdate.getId());
+            } else getInfo(response, 404, "No LabWork with such id: " + labWorkUpdate.getId());
         } catch (JAXBException e){
             this.getInfo(response, 400, "Can't understand data structure");
         }
